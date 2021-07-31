@@ -5,70 +5,210 @@
 // The player picks the order of the dice they want. For example, if they wanted the number 63, they would specify that the 2nd dice goes first. You can choose how the player specifies dice order.
 // After both players have rolled and chosen dice order, the player with the higher combined number wins.
 
-var gameMode = "";
-var playerNames = [];
-var savedDiceRoll1 = [];
-var savedDiceRoll2 = [];
+// Define default game mode.
+var gameMode = "start";
 
-var generateRandomDiceNumber = function () {
-  return Math.ceil(Math.random() * 6);
+// Store player's diceroll and number formed.
+var diceRollP1 = [];
+var diceRollP2 = [];
+
+var createdNumberP1 = "";
+var createdNumberP2 = "";
+
+// Generate random dice roll between 1 to  6.
+var diceRoll = function () {
+  var randomDiceRoll = Math.ceil(Math.random() * 6);
+  return randomDiceRoll;
 };
 
-var gameModeSelection = function () {
-  var diceRoll = generateRandomDiceNumber();
-  var gameMode = "preGame";
-  var counter = 0;
+// Generate 2 dice rolls when Player 1 clicks submit, then switches to number select mode for dice 1.
+var player1Turn = function () {
+  var firstDiceP1 = diceRoll();
+  var secondDiceP1 = diceRoll();
 
-  if (gameMode == "preGame") {
-    while (counter < 2) {
-      playerNames.push(input);
-      counter = counter + 1;
-    }
-    return (gameMode = "diceGame1");
-  }
+  console.log(firstDiceP1, secondDiceP1);
 
-  if (gameMode == "diceGame1") {
-    var diceRoll = generateRandomDiceNumber();
-    var counter = 0;
+  diceRollP1.push(firstDiceP1, secondDiceP1);
+  console.log(diceRollP1);
 
-    while (counter < 2) {
-      savedDiceRoll1.push(diceRoll);
-      counter = counter + 1;
-    }
-    return (gameMode = "diceGame2");
-  }
-
-  if (gameMode == "diceGame2") {
-    var diceRoll = generateRandomDiceNumber();
-    var counter = 0;
-
-    while (counter < 2) {
-      savedDiceRoll2.push(diceRoll);
-      counter = counter + 1;
-    }
-    return (gameMode = "diceGame1");
-  }
+  gameMode = "selectDiceOrder";
+  console.log(gameMode);
 };
 
-var getHigestDiceNumber1 = function () {
-  var higestDiceNumber1 = "";
-  if (savedDiceRoll1[0] < savedDiceRoll1[1])
-    return (higestDiceNumber1 = "savedDiceRoll1[1]" + "savedDiceRoll1[0]");
-  else return (higestDiceNumber1 = "savedDiceRoll1[0]" + "savedDiceRoll1[1]");
-};
+// Generate 2 dice roll when Player 2 clicks submit, then switches to number select mode for dice 2.
+var player2Turn = function () {
+  var firstDiceP2 = diceRoll();
+  var secondDiceP2 = diceRoll();
 
-var getHigestDiceNumber2 = function () {
-  var higestDiceNumber2 = "";
-  if (savedDiceRoll2[0] < savedDiceRoll2[1])
-    return (higestDiceNumber2 = "savedDiceRoll2[1]" + "savedDiceRoll2[0]");
-  else return (higestDiceNumber2 = "savedDiceRoll2[0]" + "savedDiceRoll2[1]");
+  console.log(firstDiceP2, secondDiceP2);
+
+  diceRollP2.push(firstDiceP2, secondDiceP2);
+  console.log(diceRollP2);
+
+  gameMode = "selectDiceOrder2";
+  console.log(gameMode);
 };
 
 var main = function (input) {
-  gameModeSelection();
-  getHigestDiceNumber1();
-  getHigestDiceNumber2();
+  // Starting Game Mode
+  if (gameMode == "start") {
+    myOutputValue =
+      "You are now playing [Beat It]. <br><br>Click on submit to roll dice!";
 
-  if (higestDiceNumber1() < higestDiceNumber2()) return "Player 2 Wins.";
-  else return "Player 1 Wins.";
+    gameMode = "player1";
+
+    return myOutputValue;
+  }
+  // Player 1 Game Mode
+  if (gameMode == "player1") {
+    player1Turn();
+
+    myOutputValue =
+      "Welcome Player 1, <br><br>" +
+      "[Dice 1] = " +
+      diceRollP1[0] +
+      "<br>[Dice 2] = " +
+      diceRollP1[1] +
+      "<br><br>In the field above:<br>Enter 1 to use " +
+      diceRollP1[0] +
+      " as your first number.  <br>Enter 2 to use " +
+      diceRollP1[1] +
+      " as your first number.";
+
+    return myOutputValue;
+  }
+  // Player 1 Dice Placement Game Mode
+  if (gameMode == "selectDiceOrder") {
+    if (input == "1") {
+      myOutputValue =
+        "[Player 1] <br><br> You have selected Dice " +
+        input +
+        " to be your first number. <br><br> Your combined number is " +
+        diceRollP1[0] +
+        diceRollP1[1] +
+        "." +
+        "<br><br> ..........................................................................<br><br>It is now Player 2's turn! <br><br> Please click on submit to roll dice.<br><br> ..........................................................................";
+
+      createdNumberP1 = diceRollP1[0] + diceRollP1[1];
+      console.log(createdNumberP1);
+
+      gameMode = "player2";
+
+      return myOutputValue;
+    }
+
+    if (input == "2") {
+      myOutputValue =
+        "[Player 1] <br><br> You have selected Dice " +
+        input +
+        " to be your first number. <br><br> Your combined number is " +
+        diceRollP1[1] +
+        diceRollP1[0] +
+        "." +
+        "<br><br> ..........................................................................<br><br>It is now Player 2's turn! <br><br> Please click on submit to roll dice.<br><br> ..........................................................................";
+
+      createdNumberP1 = diceRollP1[1] + diceRollP1[0];
+      console.log(createdNumberP1);
+
+      gameMode = "player2";
+
+      return myOutputValue;
+    }
+  }
+  // Player 2 Game Mode
+  if (gameMode == "player2") {
+    player2Turn();
+
+    myOutputValue =
+      "Welcome Player 2, <br><br>" +
+      "[Dice 1] = " +
+      diceRollP1[0] +
+      "<br>[Dice 2] = " +
+      diceRollP1[1] +
+      "<br><br>In the field above:<br>Enter 1 to use " +
+      diceRollP1[0] +
+      " as your first number.  <br>Enter 2 to use " +
+      diceRollP1[1] +
+      " as your first number.";
+
+    return myOutputValue;
+  }
+  // Player 2 Dice Placement Game Mode
+  if (gameMode == "selectDiceOrder2") {
+    if (input == "1") {
+      myOutputValue =
+        "[Player 2] <br><br> You have selected Dice " +
+        input +
+        " to be your first number. <br><br> Your combined number is " +
+        diceRollP1[0] +
+        diceRollP1[1] +
+        "." +
+        "<br><br> ..........................................................................<br><br> Please click on submit to view results.<br><br>..........................................................................";
+
+      createdNumberP2 = diceRollP1[0] + diceRollP1[1];
+      console.log(createdNumberP2);
+
+      gameMode = "result";
+
+      return myOutputValue;
+    }
+
+    if (input == "2") {
+      myOutputValue =
+        "[Player 2] <br><br> You have selected Dice " +
+        input +
+        " to be your first number. <br><br> Your combined number is " +
+        diceRollP1[1] +
+        diceRollP1[0] +
+        "." +
+        "<br><br> ..........................................................................<br><br> Please click on submit to view results.<br><br>..........................................................................";
+
+      createdNumberP2 = diceRollP1[1] + diceRollP1[0];
+      console.log(createdNumberP2);
+
+      gameMode = "result";
+
+      return myOutputValue;
+    }
+  }
+  // Determine Results Mode
+  if (gameMode == "result") {
+    if (createdNumberP1 < createdNumberP2) {
+      myOutputValue =
+        "[Results] <br><br> Player 1 produced the number " +
+        createdNumberP1 +
+        "." +
+        "<br><br> Player 2 produced the number " +
+        createdNumberP2 +
+        "." +
+        "<br><br> Congratulations, Player 2 Won!";
+
+      gameMode = "player1";
+    }
+
+    if (createdNumberP1 > createdNumberP2) {
+      myOutputValue =
+        "[Results] <br><br> Player 1 produced the number " +
+        createdNumberP1 +
+        "." +
+        "<br><br> Player 2 produced the number " +
+        createdNumberP2 +
+        "." +
+        "<br><br> Congratulations, Player 1 Won!";
+
+      gameMode = "player1";
+    } else {
+      myOutputValue =
+        "[Results] <br><br> Player 1 produced the number " +
+        createdNumberP1 +
+        "." +
+        "<br><br> Player 2 produced the number " +
+        createdNumberP2 +
+        "." +
+        "<br><br> It's a Draw!";
+
+      gameMode = "player1";
+    }
+  }
+  return myOutputValue;
 };
