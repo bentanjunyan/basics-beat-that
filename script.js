@@ -15,6 +15,25 @@ var diceRollP2 = [];
 var createdNumberP1 = "";
 var createdNumberP2 = "";
 
+var createdNumberP1Log = [];
+var createdNumberP2Log = [];
+
+// Track player's win-lose record
+var player1wins = 0;
+var player2wins = 0;
+var playertie = 0;
+
+// Adds all number in 'createdNumberP1Log' array for Player 1
+
+// Adds all number in 'createdNumberP2Log' array for Player 2
+// var totalScoreP2 = function (createdNumberP2Log) {
+//   var reducer = function () {
+//     accumulator, currentValue;
+//     return accumulator + currentValue;
+//   };
+//   return createdNumberP1Log.reduce(reducer());
+// };
+
 // Generate random dice roll between 1 to  6.
 var diceRoll = function () {
   var randomDiceRoll = Math.ceil(Math.random() * 6);
@@ -47,6 +66,28 @@ var player2Turn = function () {
 
   gameMode = "selectDiceOrder2";
   console.log(gameMode);
+};
+
+// Restart the game cycle, saves refreshes player's created numbers in the round.
+var resetgame = function () {
+  gameMode = "player1";
+
+  createdNumberP1Log.push(createdNumberP1);
+  createdNumberP2Log.push(createdNumberP2);
+
+  console.log(createdNumberP1Log);
+  console.log(createdNumberP2Log);
+
+  diceRollP1.pop();
+  diceRollP1.pop();
+  diceRollP2.pop();
+  diceRollP2.pop();
+
+  console.log(diceRollP1);
+  console.log(diceRollP2);
+
+  console.log(createdNumberP1);
+  console.log(createdNumberP2);
 };
 
 var main = function (input) {
@@ -89,7 +130,7 @@ var main = function (input) {
         "." +
         "<br><br> ..........................................................................<br><br>It is now Player 2's turn! <br><br> Please click on submit to roll dice.<br><br> ..........................................................................";
 
-      createdNumberP1 = diceRollP1[0] + diceRollP1[1];
+      createdNumberP1 = diceRollP1[0] + "" + diceRollP1[1];
       console.log(createdNumberP1);
 
       gameMode = "player2";
@@ -107,7 +148,7 @@ var main = function (input) {
         "." +
         "<br><br> ..........................................................................<br><br>It is now Player 2's turn! <br><br> Please click on submit to roll dice.<br><br> ..........................................................................";
 
-      createdNumberP1 = diceRollP1[1] + diceRollP1[0];
+      createdNumberP1 = diceRollP1[1] + "" + diceRollP1[0];
       console.log(createdNumberP1);
 
       gameMode = "player2";
@@ -122,13 +163,13 @@ var main = function (input) {
     myOutputValue =
       "Welcome Player 2, <br><br>" +
       "[Dice 1] = " +
-      diceRollP1[0] +
+      diceRollP2[0] +
       "<br>[Dice 2] = " +
-      diceRollP1[1] +
+      diceRollP2[1] +
       "<br><br>In the field above:<br>Enter 1 to use " +
-      diceRollP1[0] +
+      diceRollP2[0] +
       " as your first number.  <br>Enter 2 to use " +
-      diceRollP1[1] +
+      diceRollP2[1] +
       " as your first number.";
 
     return myOutputValue;
@@ -140,12 +181,12 @@ var main = function (input) {
         "[Player 2] <br><br> You have selected Dice " +
         input +
         " to be your first number. <br><br> Your combined number is " +
-        diceRollP1[0] +
-        diceRollP1[1] +
+        diceRollP2[0] +
+        diceRollP2[1] +
         "." +
         "<br><br> ..........................................................................<br><br> Please click on submit to view results.<br><br>..........................................................................";
 
-      createdNumberP2 = diceRollP1[0] + diceRollP1[1];
+      createdNumberP2 = diceRollP2[0] + "" + diceRollP2[1];
       console.log(createdNumberP2);
 
       gameMode = "result";
@@ -158,12 +199,12 @@ var main = function (input) {
         "[Player 2] <br><br> You have selected Dice " +
         input +
         " to be your first number. <br><br> Your combined number is " +
-        diceRollP1[1] +
-        diceRollP1[0] +
+        diceRollP2[1] +
+        diceRollP2[0] +
         "." +
         "<br><br> ..........................................................................<br><br> Please click on submit to view results.<br><br>..........................................................................";
 
-      createdNumberP2 = diceRollP1[1] + diceRollP1[0];
+      createdNumberP2 = diceRollP2[1] + "" + diceRollP2[0];
       console.log(createdNumberP2);
 
       gameMode = "result";
@@ -174,40 +215,84 @@ var main = function (input) {
   // Determine Results Mode
   if (gameMode == "result") {
     if (createdNumberP1 < createdNumberP2) {
+      player2wins = player2wins + 1;
+
       myOutputValue =
-        "[Results] <br><br> Player 1 produced the number " +
+        "Player 1 produced the number " +
         createdNumberP1 +
         "." +
         "<br><br> Player 2 produced the number " +
         createdNumberP2 +
         "." +
-        "<br><br> Congratulations, Player 2 Won!";
+        "<br><br><br>[Results] Congratulations, Player 2 Won!<br>" +
+        "<br><br>" +
+        "[Player 1] [" +
+        player1wins +
+        " Wins]" +
+        "<br>Previous Rolls: " +
+        createdNumberP1Log +
+        "<br><br>[Player 2] [" +
+        player2wins +
+        " Wins]" +
+        "<br>Previous Rolls:" +
+        createdNumberP2Log +
+        "<br><br><br> Click on submit to play again.";
 
-      gameMode = "player1";
+      resetgame();
     }
 
     if (createdNumberP1 > createdNumberP2) {
+      player1wins = player1wins + 1;
+
       myOutputValue =
-        "[Results] <br><br> Player 1 produced the number " +
+        "Player 1 produced the number " +
         createdNumberP1 +
         "." +
         "<br><br> Player 2 produced the number " +
         createdNumberP2 +
         "." +
-        "<br><br> Congratulations, Player 1 Won!";
+        "<br><br><br>[Results] Congratulations, Player 1 Won!<br>" +
+        "<br><br>" +
+        "[Player 1] [" +
+        player1wins +
+        " Wins]" +
+        "<br>Previous Rolls: " +
+        createdNumberP1Log +
+        "<br><br>[Player 2] [" +
+        player2wins +
+        " Wins]" +
+        "<br>Previous Rolls:" +
+        createdNumberP2Log +
+        "<br><br><br> Click on submit to play again.";
 
-      gameMode = "player1";
-    } else {
+      resetgame();
+    }
+
+    if (createdNumberP1 == createdNumberP2) {
+      playertie = playertie + 1;
+
       myOutputValue =
-        "[Results] <br><br> Player 1 produced the number " +
+        "Player 1 produced the number " +
         createdNumberP1 +
         "." +
         "<br><br> Player 2 produced the number " +
         createdNumberP2 +
         "." +
-        "<br><br> It's a Draw!";
+        "<br><br><br> [Results] It's a Draw!<br>" +
+        "<br><br>" +
+        "[Player 1] [" +
+        player1wins +
+        " Wins]" +
+        "<br>Previous Rolls: " +
+        createdNumberP1Log +
+        "<br><br>[Player 2] [" +
+        player2wins +
+        " Wins]" +
+        "<br>Previous Rolls:" +
+        createdNumberP2Log +
+        "<br><br><br> Click on submit to play again.";
 
-      gameMode = "player1";
+      resetgame();
     }
   }
   return myOutputValue;
